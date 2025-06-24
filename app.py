@@ -115,7 +115,14 @@ def upload_text():
         response.raise_for_status()
         flash(f"Successfully processed and created {len(admins)} admins from text file!")
     except Exception as e:
-        flash("Error uploading admins from text file: " + str(e))
+        try:
+            error_json = e.response.json()
+            error_detail = error_json.get("message", str(error_json))
+        except ValueError:
+            # Response wasn't JSON
+            error_detail = e.response.text
+
+        flash("Error uploading admins from text file: " + str(error_detail))
     return redirect(url_for("index"))
 
 @app.route("/upload_excel", methods=["POST"])
@@ -136,7 +143,14 @@ def upload_excel():
         response.raise_for_status()
         flash(f"Successfully processed and created {len(admins)} admins from excel file!")
     except Exception as e:
-        flash("Error uploading admins from excel file: " + str(e))
+        try:
+            error_json = e.response.json()
+            error_detail = error_json.get("message", str(error_json))
+        except ValueError:
+            # Response wasn't JSON
+            error_detail = e.response.text
+
+        flash("Error uploading admins from text file: " + str(error_detail))
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
