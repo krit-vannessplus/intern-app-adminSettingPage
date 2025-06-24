@@ -4,6 +4,8 @@ import requests
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
+secret_key = os.urandom(24).hex()
+app.secret_key = secret_key
 API = os.getenv("API")
 
 # External API endpoints
