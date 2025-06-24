@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admins Setting</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      h2 {
+        margin-top: 40px;
+      }
+      form {
+        margin-bottom: 20px;
+      }
+      .flash {
+        color: red;
+      }
+      /* Loading overlay styling */
+      #loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: none;
+        z-index: 9999;
+        text-align: center;
+      }
+      #loading-content {
+        position: relative;
+        top: 40%;
+        font-size: 24px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Admins Setting</h1>
+
+    <!-- Loading overlay -->
+    <div id="loading">
+      <div id="loading-content">Processing, please wait...</div>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flash">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+
+    <!-- Section: List of Admins -->
+    <h2>Existing Admins</h2>
+    <ul>
+      {% for admin in admins %}
+      <li>
+        {{ admin.email }}
+        <form
+          action="{{ url_for('delete_user') }}"
+          method="post"
+          style="display: inline"
+          onsubmit="showLoading()"
+        >
+          <input type="hidden" name="email" value="{{ admin.email }}" />
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+      {% else %}
+      <li>No admins found.</li>
+      {% endfor %}
+    </ul>
+
+    <!-- Button: Delete All Admins -->
+    <form
+      action="{{ url_for('delete_all_admins') }}"
+      method="post"
+      onsubmit="showLoading()"
+    >
+      <button type="submit" style="background-color: red; color: white">
+        Delete All Admins
+      </button>
+    </form>
+
+    <!-- Section: Create a New Admin -->
+    <h2>Create New Admin</h2>
+    <form
+      action="{{ url_for('create_user') }}"
+      method="post"
+      onsubmit="showLoading()"
+    >
+      <label for="email_create">Email:</label>
+      <input type="email" id="email_create" name="email" required />
+      <br /><br />
+      <label for="password_create">Password:</label>
+      <input type="password" id="password_create" name="password" required />
+      <br /><br />
+      <button type="submit">Create Admin</button>
+    </form>
+
+    <!-- Section: File Uploads for Bulk Admin Creation -->
+    <h2>Upload Files for Bulk Admin Creation</h2>
+
+    <!-- Text File Upload -->
+    <h3>Upload a Text File</h3>
+    <p>
+      The text file should contain one admin per line in the format:
+      <code>email,password</code>
+    </p>
+    <form
+      action="{{ url_for('upload_text') }}"
+      method="post"
+      enctype="multipart/form-data"
+      onsubmit="showLoading()"
+    >
+      <input type="file" name="textfile" accept=".txt" required />
+      <button type="submit">Process and Create Admins</button>
+    </form>
+
+    <!-- Excel File Upload -->
+    <h3>Upload an Excel File</h3>
+    <p>
+      The Excel file must have columns named <code>email</code> and
+      <code>password</code>.
+    </p>
+    <form
+      action="{{ url_for('upload_excel') }}"
+      method="post"
+      enctype="multipart/form-data"
+      onsubmit="showLoading()"
+    >
+      <input type="file" name="excelfile" accept=".xls,.xlsx" required />
+      <button type="submit">Process and Create Admins</button>
+    </form>
+
+    <script>
+      // Function to display the loading overlay
+      function showLoading() {
+        document.getElementById("loading").style.display = "block";
+        return true; // Allow form submission to proceed
+      }
+    </script>
+  </body>
+</html>
