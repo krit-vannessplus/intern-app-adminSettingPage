@@ -4,13 +4,13 @@ import requests
 from flask import Flask, render_template, request, redirect, url_for, flash
 
 app = Flask(__name__)
-app.secret_key = "your-secret-key"
+API = os.getenv("API")
 
 # External API endpoints
-FETCH_USERS_URL = "https://automate-internship-screening-backend.onrender.com/api/users/getAllAdmins"
-CREATE_USER_URL = "https://automate-internship-screening-backend.onrender.com/api/users/registerAdmin"
-BULK_CREATE_USER_URL = "https://automate-internship-screening-backend.onrender.com/api/users/registerAdmins"
-DELETE_ALL_ADMINS_URL = "https://automate-internship-screening-backend.onrender.com/api/users/deleteAllAdmins"
+FETCH_USERS_URL = f"{API}/api/users/getAllAdmins"
+CREATE_USER_URL = f"{API}/api/users/registerAdmin"
+BULK_CREATE_USER_URL = f"{API}/api/users/registerAdmins"
+DELETE_ALL_ADMINS_URL = f"{API}/api/users/deleteAllAdmins"
 
 def fetch_admins():
     try:
@@ -33,7 +33,7 @@ def delete_user():
         flash("No email provided for deletion.")
         return redirect(url_for("index"))
     try:
-        delete_url = f"https://automate-internship-screening-backend.onrender.com/api/users/deleteByEmail/{email}"
+        delete_url = f"{API}/api/users/deleteByEmail/{email}"
         response = requests.delete(delete_url)
         response.raise_for_status()
         flash(f"Deleted admin with email: {email}")

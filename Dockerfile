@@ -20,3 +20,6 @@ EXPOSE 5000
 
 # Start the Flask application
 CMD ["python", "app.py"]
+
+# Set environment variable for api
+ENV API="https://automate-internship-screening-backend.onrender.com"
