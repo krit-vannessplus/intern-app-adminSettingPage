@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: flask-admin-app
+    name: admin-setting-app
     env: docker
     region: ap-southeast-1 # Singapore, closest to Bangkok
-    plan: starter
+    plan: free
     dockerfilePath: ./Dockerfile
     envVars:
       - key: SECRET_KEY
