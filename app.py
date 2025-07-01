@@ -2,11 +2,11 @@ import os
 import pandas as pd
 import requests
 from flask import Flask, render_template, request, redirect, url_for, flash
+from config import Config
 
 app = Flask(__name__)
-secret_key = os.urandom(24).hex()
-app.secret_key = secret_key
-API = os.getenv("API")
+app.config.from_object(Config)
+API = app.config["API_URL"]
 
 # External API endpoints
 FETCH_USERS_URL = f"{API}/api/users/getAllAdmins"
@@ -154,4 +154,5 @@ def upload_excel():
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=False, host="0.0.0.0", port=port)
