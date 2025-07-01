@@ -9,4 +9,4 @@ services:
       - key: SECRET_KEY
         generate: secret
       - key: API_URL
-        value: https://automate-internship-screening-backend.onrender.com
+        value: https://intern-app-backend.onrender.com
